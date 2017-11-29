@@ -1,6 +1,17 @@
-var express = require('express');
-var app = express();
-var path = require('path');
+const express = require('express');
+const app = express();
+const path = require('path');
+
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json())
+
+mongoose.connect('mongodb://localhost/nanopets');
+
+const pets = require('./pet/controller');
+
+app.get('/api/nanopets', pets.listPets);
 
 // This serves all files placed in the /public
 // directory (where gulp will build all React code)
@@ -12,6 +23,8 @@ app.use(express.static('assets'));
 
 // Include your own logic here (so it has precedence over the wildcard
 // route below)
+
+app.get('/api/nanopets:id', pets.playPet);
 
 // This route serves your index.html file (which
 // initializes React)
